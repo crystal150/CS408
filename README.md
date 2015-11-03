@@ -1,3 +1,4 @@
 # CS408 
 
-Speaker Sharing System
+Linkvoice
+Web-based Personal Microphone Service
