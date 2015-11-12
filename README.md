@@ -1,6 +1,6 @@
 
 
-\#\#\# Initializing \#\#\#
+#Initializing
 
 git config --global user.name <Your Name> #\# ex) Jaryong Lee
 git config --global user.email <Your KAIST email> #\# ex) crystal00@kaist.ac.kr
@@ -16,7 +16,7 @@ git branch
 git checkout <Your Workstation>
 
 
-\#\#\# Add, Remove, Commit, Push \#\#\#
+#Add, Remove, Commit, Push
 
 \# If you add or modify some files,
 git status
@@ -34,6 +34,6 @@ git push
 \# Done
 
 
-\#\#\# Download latest project file from github \#\#\#
+#Download latest project file from github
 
 git pull
