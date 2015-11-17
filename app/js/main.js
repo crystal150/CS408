@@ -118,7 +118,7 @@ function handleUserMediaError(error){
   console.log('getUserMedia error: ', error);
 }
 
-var constraints = {video: true};
+var constraints = {audio: true};
 
 getUserMedia(constraints, handleUserMedia, handleUserMediaError);
 console.log('Getting user media with constraints', constraints);
