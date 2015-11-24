@@ -14,6 +14,7 @@ var localStream;
 var pc;
 var remoteStream;
 var turnReady;
+var turn;
 
 var pc_config = webrtcDetectedBrowser === 'firefox' ?
   {'iceServers':[{'url':'stun:23.21.150.121'}]} : // number IP
@@ -50,25 +51,40 @@ if (room !== '') {
 socket.on('created', function (room){
   console.log('Created room ' + room);
   isInitiator = true;
+	getUserMedia(constraints, handleUserMedia, handleUserMediaError);
+	console.log('Getting user media with constraints', constraints);
 });
 
 socket.on('full', function (room){
   console.log('Room ' + room + ' is full');
 });
 
-socket.on('join', function (room){
-  console.log('Another peer made a request to join room ' + room);
-  console.log('This peer is the initiator of room ' + room + '!');
+socket.on('join', function (room, numClients){
+  console.log('Another peer made a request to join room ' + room + ' turn ' + numClients);
+	if (isInitiator) {
+    $('body').append('<input type="button" value="Grant '
+			+ numClients + '" onclick="socket.emit(\'grant\', ' + numClients + ');">');
+	}
   isChannelReady = true;
 });
 
-socket.on('joined', function (room){
+socket.on('joined', function (room, numClients){
   console.log('This peer has joined room ' + room);
+	turn = numClients
   isChannelReady = true;
 });
 
 socket.on('log', function (array){
   console.log.apply(console, array);
+});
+
+socket.on('grant', function (numClients) {
+	console.log('grant');
+	console.log(numClients);
+	if (turn === numClients) {
+		getUserMedia(constraints, handleUserMedia, handleUserMediaError);
+		console.log('Getting user media with constraints', constraints);
+	}
 });
 
 ////////////////////////////////////////////////
@@ -120,12 +136,11 @@ function handleUserMediaError(error){
 
 var constraints = {audio: true};
 
-getUserMedia(constraints, handleUserMedia, handleUserMediaError);
-console.log('Getting user media with constraints', constraints);
-
+/*
 if (location.hostname != "localhost") {
   requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
 }
+*/
 
 function maybeStart() {
   if (!isStarted && localStream && isChannelReady) {

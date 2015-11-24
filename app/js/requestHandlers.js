@@ -2,16 +2,18 @@ var http = require('http');
 var fs = require('fs');
 
 function index(res) {
-	fs.readFile('index.html', function (error, data) {
-		res.write(data);
-		res.end();
-	})
+  res.writeHead(200, {"Content-Type": "text/html"});
+	var htmlFile = fs.readFileSync("view/index.html");
+	res.write(htmlFile);
+  res.end();
 }
 
-function hello() { 
-	console.log("Request handler 'hello' was called."); 
-	return "Hello Hello";
+function audience(res) { 
+  res.writeHead(200, {"Content-Type": "text/html"});
+	var htmlFile = fs.readFileSync("view/audienceView.html");
+	res.write(htmlFile);
+  res.end();
 } 
 
 exports.index = index;
-exports.hello = hello;
+exports.audience = audience;

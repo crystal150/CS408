@@ -5,5 +5,5 @@ var requestHandlers = require("./js/requestHandlers.js");
 
 var handle = {}
 handle["/"] = requestHandlers.index;
-handle["/hello"] = requestHandlers.hello;   
+handle["audience"] = requestHandlers.audience;
 server.start(router.route, handle);
