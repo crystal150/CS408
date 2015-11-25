@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html background="#000000">
 <head>
 
 <meta name='keywords' content='WebRTC, HTML5, JavaScript' />
@@ -10,32 +10,36 @@
 
 <title>WebRTC client</title>
 
-<!-- <link rel='stylesheet' href='css/main.css' /> -->
+<link rel='stylesheet' href='../css/index.css' /> 
 
 </head>
 
-<body>
-
-<div id='container'>
-
-  <div id='videos'>
-    <video id='localVideo' autoplay muted></video>
-    <video id='remoteVideo' autoplay></video>
-  </div>
-
-  <div id='textareas'>
-		<textarea id="dataChannelSend" disabled placeholder="Press Start, enter some text, then press Send."></textarea>
-		<textarea id="dataChannelReceive" disabled></textarea>
-	</div>
-
-  <button id="sendButton" disabled>Send</button>
-
+<body background="../images/background2.jpg">
+<div id="wrapper" style="position:relative">
+<div id="top" style="width:100%; height:15%; ">
+    <img src="../images/logo.png" style="padding:15px 15px"/>
+</div>
+<div id="menu_bar" style="width:100%; height:5%; text-align:center">
+    <button type="button" class="menu_button" style="width:23%;display:inline-block">SIGN UP</button>
+    <button type="button" class="menu_button" style="width:23%;display:inline-block">SIGN IN</button>
+    <button type="button" class="menu_button" style="width:23%;display:inline-block">ABOUT US</button>
+    <button type="button" class="menu_button" style="width:23%;display:inline-block">HELP</button>
 </div>
 
-<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<div id="header_container" style="width:100%">
+    <center><h1>Link your crowd's voice</h1></center>
+</div>
+<div id="subtitle_container" style="width:100%">
+    <center>It's inconvenient to bring microphone to audience from hand to hand. So we suggest using smartphone as a handy microphone<br><br><br></center>
+</div>
+<div id="presentbutton_container" style="width:100%;">
+    <center><input type="image" id="produce" src="../images/button.png" /></center>
+</div>
+</div>
+
+<script src='//code.jquery.com/jquery-1.11.3.min.js'></script>
 <script src='/socket.io/socket.io.js'></script>
-<script src='js/lib/adapter.js'></script>
-<script src='js/main.js'></script>
+<script src='js/presenter.js'></script>
 
 </body>
 </html>

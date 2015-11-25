@@ -32,16 +32,6 @@ var sdpConstraints = {'mandatory': {
 
 // Document preprocess.
 
-$("#url").append("<center id=\"link\">" + location.href + "</center>");
-
-function copyToClipboard(element) {
-  console.log("copyToClipboard");
-	var $temp = $("<input>");
-  $("body").append($temp);
-  $temp.val($(element).text()).select();
-  document.execCommand("copy");
-  $temp.remove();
-}
 
 function user_return(name, comment, numClient) {
 	return '<tr>\n'
@@ -52,6 +42,11 @@ function user_return(name, comment, numClient) {
 					+ 'src="../images/grant_button.png"></td>\n'
 				+ '</tr>';
 }
+
+var name = document.getElementById("name");
+var comment = document.getElementById("comment");
+name.disabled = true ;
+comment.disabled = true ;
 
 /////////////////////////////////////////////
 
@@ -67,7 +62,7 @@ var socket = io.connect();
 
 if (room !== '') {
   console.log('Create or join room', room);
-  socket.emit('create or join', room);
+  socket.emit('create or join', room, name.value, comment.value);
 }
 
 socket.on('created', function (room){
@@ -83,9 +78,6 @@ socket.on('full', function (room){
 
 socket.on('join', function (room, numClients, name, comment){
   console.log('Another peer made a request to join room ' + room + ' turn ' + numClients);
-	if (isInitiator) {
-    $('table').append(user_return(name, comment, numClients));
-	}
   isChannelReady = true;
 });
 
