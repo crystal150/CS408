@@ -2,6 +2,7 @@ var static = require('node-static');
 var http = require('http');
 var url = require('url');
 var file = new(static.Server)();
+var urls = {};
 
 function start(route, handle) { 
 	function onRequest(req, res) { 
@@ -24,6 +25,13 @@ function start(route, handle) {
 				socket.emit('log', array);
 		}
 
+		socket.on('generate', function () {
+			new_url = Math.floor(Math.random() * 1000);
+			urls["/" + new_url] = true;
+			log('Generate URL: ', new_url);
+			socket.emit('move', new_url);
+		});
+
 		socket.on('message', function (message) {
 			log('Got message: ', message);
 			socket.broadcast.emit('message', message); // should be room only
@@ -34,7 +42,7 @@ function start(route, handle) {
 			socket.broadcast.emit('grant', numClient);
 		});
 
-		socket.on('create or join', function (room) {
+		socket.on('create or join', function (room, name, comment) {
 			var numClients = io.sockets.clients(room).length;
 
 			log('Room ' + room + ' has ' + numClients + ' client(s)');
@@ -44,7 +52,7 @@ function start(route, handle) {
 				socket.join(room);
 				socket.emit('created', room);
 			} else if (numClients < 10) {
-				io.sockets.in(room).emit('join', room, numClients);
+				io.sockets.in(room).emit('join', room, numClients, name, comment);
 				socket.join(room);
 				socket.emit('joined', room, numClients);
 			} else { // max ten clients
@@ -60,3 +68,4 @@ function start(route, handle) {
 } 
  
 exports.start = start;
+exports.urls = urls;

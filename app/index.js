@@ -6,4 +6,5 @@ var requestHandlers = require("./js/requestHandlers.js");
 var handle = {}
 handle["/"] = requestHandlers.index;
 handle["audience"] = requestHandlers.audience;
+handle["presenter"] = requestHandlers.presenter;
 server.start(router.route, handle);

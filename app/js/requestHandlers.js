@@ -10,10 +10,18 @@ function index(res) {
 
 function audience(res) { 
   res.writeHead(200, {"Content-Type": "text/html"});
-	var htmlFile = fs.readFileSync("view/audienceView.html");
+	var htmlFile = fs.readFileSync("view/signAudience.html");
+	res.write(htmlFile);
+  res.end();
+} 
+
+function presenter(res) { 
+  res.writeHead(200, {"Content-Type": "text/html"});
+	var htmlFile = fs.readFileSync("view/presenterView.html");
 	res.write(htmlFile);
   res.end();
 } 
 
 exports.index = index;
 exports.audience = audience;
+exports.presenter = presenter;

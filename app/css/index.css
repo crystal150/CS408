@@ -1,0 +1,36 @@
+body{
+    background-size:cover;
+    background-repeat:no-repeat;
+    margin:0;
+    padding:0;
+    height:100%
+    
+}
+
+#wrapper{
+    position:relative;
+    min-height:100%
+}
+#menu_bar{
+    background:rgba(0,0,0,.5);
+}
+.menu_button{
+    border:0px;
+    background:rgba(0,0,0,.0);
+    color:#ffffff;
+}
+
+h1{
+    /* Link your crowd’s vo: */
+    font-family: .AppleSystemUIFont;
+    font-size: 36px;
+    color: #FFFFFF;
+    line-height: 43px;
+}
+#subtitle_container{
+/* It’s inconvenient to: */
+    font-family: .AppleSystemUIFont;
+    font-size: 12px;
+    color: #9B9B9B;
+    line-height: 15px;
+}

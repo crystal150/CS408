@@ -10,28 +10,63 @@
 
 <title>WebRTC client</title>
 
-<!-- <link rel='stylesheet' href='css/main.css' /> -->
+<link rel='stylesheet' href='../css/presenter.css' />
 
 </head>
 
-<body>
-
-<div id='container'>
-
-  <div id='videos'>
-    <video id='localVideo' autoplay muted></video>
-    <video id='remoteVideo' autoplay></video>
-  </div>
-
-  <div id='textareas'>
-		<textarea id="dataChannelSend" disabled placeholder="Press Start, enter some text, then press Send."></textarea>
-		<textarea id="dataChannelReceive" disabled></textarea>
-	</div>
-
-  <button id="sendButton" disabled>Send</button>
-
+<body background="../images/background2.jpg">
+<div id="wrapper" style="position:relative">
+<div id="top" style="width:100%; height:15%; ">
+    <img src="../images/logo.png" style="padding:15px 15px"/>
 </div>
+<div id="menu_bar" style="width:100%; height:5%; text-align:center">
+    <button type="button" class="menu_button" style="width:23%;display:inline-block">SIGN UP</button>
+    <button type="button" class="menu_button" style="width:23%;display:inline-block">SIGN IN</button>
+    <button type="button" class="menu_button" style="width:23%;display:inline-block">ABOUT US</button>
+    <button type="button" class="menu_button" style="width:23%;display:inline-block">HELP</button>
+</div>
+<div id='videos'>
+  <video id='localVideo' autoplay muted></video>
+  <video id='remoteVideo' autoplay></video>
+</div>
+<div id="url">
+  <!-- Link will be appended by jquery -->
+</div>
+<center><button onclick="copyToClipboard('#link')" id="copy_link_button">COPY LINK</button></center>
+</div>
+<center>
+<table style="width:100%">
+<!--
+    <tr>
+        <td class="name_td">MARY</td>
+        <td class="comm_td">Hi my name is MARY</td>
+        <td class="butt_td"><img src="../images/grant_button.png"/></td>
+    </tr>
+    <tr>
+        <td class="name_td">JETTI</td>
+        <td class="comm_td">Wassup MARY</td>
+        <td class="butt_td"><img src="../images/grant_button.png"/></td>
+    </tr>
+    <tr>
+        <td class="name_td">HOWARD</td>
+        <td class="comm_td">HOW ARE YOU?</td>
+        <td class="butt_td"><img src="../images/grant_button.png"/></td>
+    </tr>
+    <tr>
+        <td class="name_td">Carter</td>
+        <td class="comm_td">Hey mr.carter</td>
+        <td class="butt_td"><img src="../images/grant_button_off.png"/></td>
+    </tr>
+    <tr>
+        <td class="name_td">Tony</td>
+        <td class="comm_td">i am ironman</td>
+        <td class="butt_td"><img src="../images/grant_button_off.png"/></td>
+    </tr>
+-->
+</table>
+</center>
 
+<script src='//code.jquery.com/jquery-1.11.3.min.js'></script>
 <script src='/socket.io/socket.io.js'></script>
 <script src='js/lib/adapter.js'></script>
 <script src='js/main.js'></script>

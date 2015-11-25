@@ -10,27 +10,33 @@
 
 <title>WebRTC client</title>
 
-<!-- <link rel='stylesheet' href='css/main.css' /> -->
+<link rel='stylesheet' href='../css/audience.css' />
 
 </head>
 
-<body>
-
-<div id='container'>
-
-  <div id='videos'>
-    <video id='localVideo' autoplay muted></video>
-    <video id='remoteVideo' autoplay></video>
-  </div>
-
-  <div id='textareas'>
-		<textarea id="dataChannelSend" disabled placeholder="Press Start, enter some text, then press Send."></textarea>
-		<textarea id="dataChannelReceive" disabled></textarea>
-	</div>
-
-  <button id="sendButton" disabled>Send</button>
-
+<body background="../images/background2.jpg"> 
+<div id="wrapper" style="position:relative">
+<div id="top" style="width:100%; height:15%; ">
+    <img src="../images/logo.png" style="padding:15px 15px"/>
 </div>
+<div id="menu_bar" style="width:100%; height:5%; text-align:center">
+    <button type="button" class="menu_button" style="width:23%;display:inline-block">SIGN UP</button>
+    <button type="button" class="menu_button" style="width:23%;display:inline-block">SIGN IN</button>
+    <button type="button" class="menu_button" style="width:23%;display:inline-block">ABOUT US</button>
+    <button type="button" class="menu_button" style="width:23%;display:inline-block">HELP</button>
+</div>
+
+<div id="url">
+    <center>LinkVoice.com/3353746661</center>
+</div>
+<center><button type="button" id="copy_link_button">COPY LINK</button></center>
+</div>
+<center style="color:#ffffff">Your Name<center>
+<input type="text" name="name" style="width:80%; padding:0px">
+<center style="color:#ffffff;padding-top:20px">Comment<center>
+<input type="text" name="comment" style="width:80%; padding:20px 0px">
+<center><div id="join_button" style="padding:60px; width:60px; height:60px"><img src="../images/mic_button.png" style="width:60px;height:60px;"/></div></center>
+
 
 <script src='/socket.io/socket.io.js'></script>
 <script src='js/lib/adapter.js'></script>

@@ -1,0 +1,59 @@
+
+body{
+    background-size:cover;
+    background-repeat:no-repeat;
+    margin:0;
+    padding:0;
+    height:100%
+    
+}
+#wrapper{
+    position:relative;
+    min-height:100%
+}
+#menu_bar{
+    background:rgba(0,0,0,.5);
+}
+.menu_button{
+    border:0px;
+    background:rgba(0,0,0,.0);
+    color:#ffffff;
+}
+#url{
+    /* LinkVoice.com/363445: */
+    font-family: .AppleSystemUIFont;
+    font-size: 24px;
+    color: #FFFFFF;
+    line-height: 28px;
+    margin-top:30px;
+}
+#copy_link_button{
+    background: rgba(64,64,64,0.50);
+    border:0px;
+    color:#ffffff;
+    width:100px;
+    height:30px;
+    margin-top:20px;
+    margin-bottom:30px;
+}
+table{
+    border:1px solid #777777;
+}
+.name_td{
+    font-family: .AppleSystemUIFont;
+    width:15%;
+    height:40px;
+    color:#ffffff;
+    text-align:center;
+}
+
+.comm_td{
+    font-family: .AppleSystemUIFont;
+    width:65%;
+    height:40px;
+    color:#777777;
+}
+.butt_td{
+    width:20%;
+    height:40px;
+}
