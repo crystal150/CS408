@@ -56,7 +56,7 @@ function user_return(name, comment, numClient) {
 }
 
 function granting(numClient) {
-	stop();
+	handleRemoteHangup();
 	$('#granted' + turn).hide();
 	$('#grant' + turn).show();
 	turn = numClient;
@@ -162,12 +162,6 @@ function handleUserMediaError(error){
 
 var constraints = {audio: true};
 
-/*
-if (location.hostname != "localhost") {
-  requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
-}
-*/
-
 function maybeStart() {
 	console.log("BEFORE MAYBE START", isStarted, localStream, isChannelReady);
   if (!isStarted && localStream && isChannelReady) {
@@ -219,12 +213,6 @@ function createPeerConnection() {
   } else {
     pc.ondatachannel = gotReceiveChannel;
   }
-}
-
-function sendData() {
-  var data = sendTextarea.value;
-  sendChannel.send(data);
-  trace('Sent data: ' + data);
 }
 
 function gotReceiveChannel(event) {
@@ -367,7 +355,6 @@ function handleRemoteHangup() {
 function stop() {
   // isAudioMuted = false;
   // isVideoMuted = false;
-	console.log('stop');
   try {
 		pc.close();
   	pc = null;

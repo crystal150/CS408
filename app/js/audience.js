@@ -87,7 +87,6 @@ socket.on('grant', function (numClients) {
 	console.log('grant', numClients);
 	if (turn == numClients) {
 		document.getElementById("not_granted").src = "../images/granted.png";
-		sendMessage('got user media', turn);
 		getUserMedia(constraints, handleUserMedia, handleUserMediaError);
 		console.log('Getting user media with constraints', constraints);
 	} else if (isStarted) {
@@ -138,10 +137,7 @@ function handleUserMedia(stream) {
   localStream = stream;
   attachMediaStream(localVideo, stream);
   console.log('Adding local stream.');
-//  sendMessage('got user media');
-  if (isInitiator) {
-    maybeStart();
-  }
+	sendMessage('got user media', turn);
 }
 
 function handleUserMediaError(error){
@@ -150,12 +146,6 @@ function handleUserMediaError(error){
 
 var constraints = {audio: true};
 
-/*
-if (location.hostname != "localhost") {
-  requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
-}
-*/
-
 function maybeStart() {
 	console.log('BEFORE MAYBE START', isStarted, localStream, isChannelReady);
   if (!isStarted && localStream && isChannelReady) {
@@ -163,9 +153,6 @@ function maybeStart() {
     createPeerConnection();
     pc.addStream(localStream);
     isStarted = true;
-    if (isInitiator) {
-      doCall();
-    }
   }
 }
 
