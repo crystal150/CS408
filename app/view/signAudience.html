@@ -25,7 +25,7 @@
     <button type="button" class="menu_button" style="width:23%;display:inline-block">ABOUT US</button>
     <button type="button" class="menu_button" style="width:23%;display:inline-block">HELP</button>
 </div>
-<div id='videos'>
+<div id='videos' style="visibility: hidden">
 	<video id='localVideo' autoplay muted></video>
 	<video id='remoteVideo' autoplay muted></video>
 </div>
@@ -38,8 +38,9 @@
 <center style="color:#ffffff;padding-top:20px">Comment<center>
 <input type="text" id="comment" style="width:80%; padding:20px 0px">
 <div id="join_button" style="padding:60px">
-<input type="image" onclick="$.getScript('js/audience.js'); $(this).hide();"
+<input type="image" id='join' onclick="$.getScript('js/audience.js'); $(this).hide(); $('#not_granted').show();"
 			src="../images/join_button.png" />
+<input type="image" id='not_granted' src="../images/not_granted.png"/>
 </div>
 </div>
 

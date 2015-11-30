@@ -39,6 +39,19 @@ body{
 table{
     border:1px solid #777777;
 }
+
+.top_tr{
+		background-color: black;
+}
+
+.number_td{
+    font-family: .AppleSystemUIFont;
+    width:5%;
+    height:40px;
+    color:#ffffff;
+    text-align:center;
+}
+
 .name_td{
     font-family: .AppleSystemUIFont;
     width:15%;
@@ -49,7 +62,7 @@ table{
 
 .comm_td{
     font-family: .AppleSystemUIFont;
-    width:65%;
+    width:60%;
     height:40px;
     color:#777777;
 }

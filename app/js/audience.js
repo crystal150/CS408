@@ -32,17 +32,6 @@ var sdpConstraints = {'mandatory': {
 
 // Document preprocess.
 
-
-function user_return(name, comment, numClient) {
-	return '<tr>\n'
-					+ '<td class="name_td">' + numClient + ' ' + name + '</td>\n'
-					+ '<td class="comm_td">' + comment + '</td>\n'
-					+ '<td class="butt_td">'
-					+ '<input type="image" onclick="socket.emit(\'grant\', ' + numClient + ');"'
-					+ 'src="../images/grant_button.png"></td>\n'
-				+ '</tr>';
-}
-
 var name = document.getElementById("name");
 var comment = document.getElementById("comment");
 name.disabled = true ;
@@ -83,7 +72,10 @@ socket.on('join', function (room, numClients, name, comment){
 
 socket.on('joined', function (room, numClients){
   console.log('This peer has joined room ' + room);
-	turn = numClients
+	if (turn == null){
+		turn = numClients;
+	}
+	console.log('turn', turn);
   isChannelReady = true;
 });
 
@@ -92,11 +84,15 @@ socket.on('log', function (array){
 });
 
 socket.on('grant', function (numClients) {
-	console.log('grant');
-	console.log(numClients);
-	if (turn === numClients) {
+	console.log('grant', numClients);
+	if (turn == numClients) {
+		document.getElementById("not_granted").src = "../images/granted.png";
+		sendMessage('got user media', turn);
 		getUserMedia(constraints, handleUserMedia, handleUserMediaError);
 		console.log('Getting user media with constraints', constraints);
+	} else if (isStarted) {
+		document.getElementById("not_granted").src = "../images/not_granted.png";
+	  handleRemoteHangup();
 	}
 });
 
@@ -104,27 +100,32 @@ socket.on('grant', function (numClients) {
 
 function sendMessage(message){
 	console.log('Sending message: ', message);
-  socket.emit('message', message);
+  socket.emit('message', message, turn);
 }
 
-socket.on('message', function (message){
-  console.log('Received message:', message);
-  if (message === 'got user media') {
-  	maybeStart();
-  } else if (message.type === 'offer') {
-    if (!isInitiator && !isStarted) {
-      maybeStart();
-    }
-    pc.setRemoteDescription(new RTCSessionDescription(message));
-    doAnswer();
-  } else if (message.type === 'answer' && isStarted) {
-    pc.setRemoteDescription(new RTCSessionDescription(message));
-  } else if (message.type === 'candidate' && isStarted) {
-    var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,
-      candidate:message.candidate});
-    pc.addIceCandidate(candidate);
-  } else if (message === 'bye' && isStarted) {
-    handleRemoteHangup();
+socket.on('message', function (message, numClient){
+	if (turn == numClient) {
+		console.log('Received message:', message, numClient);
+		if (message === 'got user media' && turn == numClient) {
+			maybeStart();
+		} else if (message.type === 'offer' && turn == numClient) {
+			if (!isInitiator && !isStarted) {
+				maybeStart();
+			}
+			pc.setRemoteDescription(new RTCSessionDescription(message));
+			doAnswer();
+		} else if (message.type === 'answer' && isStarted && turn == numClient) {
+			pc.setRemoteDescription(new RTCSessionDescription(message));
+		} else if (message.type === 'candidate' && isStarted && turn == numClient) {
+			var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,
+				candidate:message.candidate});
+			pc.addIceCandidate(candidate);
+	  } else if (message === 'bye' && isStarted) {
+	    handleRemoteHangup();
+		}
+	} else if (message === 'bye' && numClient == 0) {
+		document.getElementById("not_granted").src = "../images/dead_button.png";
+		document.getElementById("granted").src = "../images/dead_button.png";
   }
 });
 
@@ -137,7 +138,7 @@ function handleUserMedia(stream) {
   localStream = stream;
   attachMediaStream(localVideo, stream);
   console.log('Adding local stream.');
-  sendMessage('got user media');
+//  sendMessage('got user media');
   if (isInitiator) {
     maybeStart();
   }
@@ -156,7 +157,9 @@ if (location.hostname != "localhost") {
 */
 
 function maybeStart() {
+	console.log('BEFORE MAYBE START', isStarted, localStream, isChannelReady);
   if (!isStarted && localStream && isChannelReady) {
+		console.log('MAYBE START');
     createPeerConnection();
     pc.addStream(localStream);
     isStarted = true;
@@ -167,7 +170,7 @@ function maybeStart() {
 }
 
 window.onbeforeunload = function(e){
-	sendMessage('bye');
+	sendMessage('bye', turn);
 }
 
 /////////////////////////////////////////////////////////

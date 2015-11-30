@@ -1,4 +1,5 @@
 $("#url").append("<center id=\"link\">" + location.href + "</center>");
+$("#not_granted").hide();
 
 function copyToClipboard(element) {
 	console.log("copyToClipboard");

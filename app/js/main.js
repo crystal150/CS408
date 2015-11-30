@@ -44,13 +44,23 @@ function copyToClipboard(element) {
 }
 
 function user_return(name, comment, numClient) {
-	return '<tr>\n'
-					+ '<td class="name_td">' + numClient + ' ' + name + '</td>\n'
+	return '<tr id="line' + numClient +'">\n'
+					+ '<td class="number_td">' + numClient + '</td>\n'
+					+ '<td class="name_td">' + name + '</td>\n'
 					+ '<td class="comm_td">' + comment + '</td>\n'
 					+ '<td class="butt_td">'
-					+ '<input type="image" onclick="socket.emit(\'grant\', ' + numClient + ');"'
-					+ 'src="../images/grant_button.png"></td>\n'
+					+ '<input type="image" id="grant' + numClient + '" onclick="granting(' + numClient + '); $(this).hide(); $(\'#granted' + numClient + '\').show();"'
+					+ 'src="../images/grant_button.png">\n'
+					+ '<input type="image" id="granted' + numClient + '" src="../images/granted_button.png"></td>\n'
 				+ '</tr>';
+}
+
+function granting(numClient) {
+	stop();
+	$('#granted' + turn).hide();
+	$('#grant' + turn).show();
+	turn = numClient;
+	socket.emit('grant', numClient);
 }
 
 /////////////////////////////////////////////
@@ -73,7 +83,7 @@ if (room !== '') {
 socket.on('created', function (room){
   console.log('Created room ' + room);
   isInitiator = true;
-	getUserMedia(constraints, handleUserMedia, handleUserMediaError);
+//	getUserMedia(constraints, handleUserMedia, handleUserMediaError);
 	console.log('Getting user media with constraints', constraints);
 });
 
@@ -85,13 +95,14 @@ socket.on('join', function (room, numClients, name, comment){
   console.log('Another peer made a request to join room ' + room + ' turn ' + numClients);
 	if (isInitiator) {
     $('table').append(user_return(name, comment, numClients));
+		$("#granted" + numClients).hide();
 	}
   isChannelReady = true;
 });
 
 socket.on('joined', function (room, numClients){
   console.log('This peer has joined room ' + room);
-	turn = numClients
+	turn = numClients;
   isChannelReady = true;
 });
 
@@ -99,24 +110,15 @@ socket.on('log', function (array){
   console.log.apply(console, array);
 });
 
-socket.on('grant', function (numClients) {
-	console.log('grant');
-	console.log(numClients);
-	if (turn === numClients) {
-		getUserMedia(constraints, handleUserMedia, handleUserMediaError);
-		console.log('Getting user media with constraints', constraints);
-	}
-});
-
 ////////////////////////////////////////////////
 
 function sendMessage(message){
 	console.log('Sending message: ', message);
-  socket.emit('message', message);
+  socket.emit('message', message, turn);
 }
 
-socket.on('message', function (message){
-  console.log('Received message:', message);
+socket.on('message', function (message, numClient){
+  console.log('Received message:', message, numClient);
   if (message === 'got user media') {
   	maybeStart();
   } else if (message.type === 'offer') {
@@ -131,9 +133,12 @@ socket.on('message', function (message){
     var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,
       candidate:message.candidate});
     pc.addIceCandidate(candidate);
-  } else if (message === 'bye' && isStarted) {
+  } else if (message === 'bye' && isStarted && turn == numClient) {
     handleRemoteHangup();
-  }
+		$("#line" + numClient).hide();
+  } else if (message === 'bye') {
+		$("#line" + numClient).hide();
+	}
 });
 
 ////////////////////////////////////////////////////
@@ -164,7 +169,9 @@ if (location.hostname != "localhost") {
 */
 
 function maybeStart() {
+	console.log("BEFORE MAYBE START", isStarted, localStream, isChannelReady);
   if (!isStarted && localStream && isChannelReady) {
+		console.log('MAYBE START');
     createPeerConnection();
     pc.addStream(localStream);
     isStarted = true;
@@ -175,7 +182,7 @@ function maybeStart() {
 }
 
 window.onbeforeunload = function(e){
-	sendMessage('bye');
+	sendMessage('bye', 0);
 }
 
 /////////////////////////////////////////////////////////
@@ -348,21 +355,26 @@ function handleRemoteStreamRemoved(event) {
 function hangup() {
   console.log('Hanging up.');
   stop();
-  sendMessage('bye');
+  sendMessage('bye', 0);
 }
 
 function handleRemoteHangup() {
   console.log('Session terminated.');
   stop();
-  isInitiator = false;
+//  isInitiator = false;
 }
 
 function stop() {
-  isStarted = false;
   // isAudioMuted = false;
   // isVideoMuted = false;
-  pc.close();
-  pc = null;
+	console.log('stop');
+  try {
+		pc.close();
+  	pc = null;
+	} catch (e) {
+	}
+  isStarted = false;
+	getUserMedia(constraints, handleUserMedia, handleUserMediaError);
 }
 
 ///////////////////////////////////////////

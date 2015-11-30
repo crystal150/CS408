@@ -3,6 +3,8 @@ var http = require('http');
 var url = require('url');
 var file = new(static.Server)();
 var urls = {};
+var populations = {};
+
 
 function start(route, handle) { 
 	function onRequest(req, res) { 
@@ -11,7 +13,7 @@ function start(route, handle) {
 		console.log("Request for " + pathname + " received.");
 		route(handle, pathname, res);
 	}
-	var app = http.createServer(onRequest).listen(2013); 
+	var app = http.createServer(onRequest).listen(2014); 
 	console.log("Server has started.");
 
 	var io = require('socket.io').listen(app);
@@ -28,13 +30,14 @@ function start(route, handle) {
 		socket.on('generate', function () {
 			new_url = Math.floor(Math.random() * 1000);
 			urls["/" + new_url] = true;
+			populations[new_url] = -1;
 			log('Generate URL: ', new_url);
 			socket.emit('move', new_url);
 		});
 
-		socket.on('message', function (message) {
-			log('Got message: ', message);
-			socket.broadcast.emit('message', message); // should be room only
+		socket.on('message', function (message, numClient) {
+			log('Got message: ', message, numClient);
+			socket.broadcast.emit('message', message, numClient); // should be room only
 		});
 
 		socket.on('grant', function (numClient) {
@@ -44,6 +47,7 @@ function start(route, handle) {
 
 		socket.on('create or join', function (room, name, comment) {
 			var numClients = io.sockets.clients(room).length;
+			populations[room] += 1;
 
 			log('Room ' + room + ' has ' + numClients + ' client(s)');
 			log('Request to create or join room', room);
@@ -52,9 +56,9 @@ function start(route, handle) {
 				socket.join(room);
 				socket.emit('created', room);
 			} else if (numClients < 10) {
-				io.sockets.in(room).emit('join', room, numClients, name, comment);
+				io.sockets.in(room).emit('join', room, populations[room], name, comment);
 				socket.join(room);
-				socket.emit('joined', room, numClients);
+				socket.emit('joined', room, populations[room]);
 			} else { // max ten clients
 				socket.emit('full', room);
 			}
