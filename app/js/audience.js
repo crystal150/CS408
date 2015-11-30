@@ -100,7 +100,7 @@ socket.on('grant', function (numClients) {
 
 function sendMessage(message){
 	console.log('Sending message: ', message);
-  socket.emit('message', message, turn);
+  socket.emit('message', room, message, turn);
 }
 
 socket.on('message', function (message, numClient){

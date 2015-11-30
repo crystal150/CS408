@@ -35,14 +35,14 @@ function start(route, handle) {
 			socket.emit('move', new_url);
 		});
 
-		socket.on('message', function (message, numClient) {
+		socket.on('message', function (room, message, numClient) {
 			log('Got message: ', message, numClient);
-			socket.broadcast.emit('message', message, numClient); // should be room only
+			io.sockets.in(room).emit('message', message, numClient); // should be room only
 		});
 
-		socket.on('grant', function (numClient) {
+		socket.on('grant', function (room, numClient) {
 			log('Grant: ', numClient);
-			socket.broadcast.emit('grant', numClient);
+			io.sockets.in(room).emit('grant', numClient);
 		});
 
 		socket.on('create or join', function (room, name, comment) {

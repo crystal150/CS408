@@ -60,7 +60,7 @@ function granting(numClient) {
 	$('#granted' + turn).hide();
 	$('#grant' + turn).show();
 	turn = numClient;
-	socket.emit('grant', numClient);
+	socket.emit('grant', room, numClient);
 }
 
 /////////////////////////////////////////////
@@ -114,7 +114,7 @@ socket.on('log', function (array){
 
 function sendMessage(message){
 	console.log('Sending message: ', message);
-  socket.emit('message', message, turn);
+  socket.emit('message', room, message, turn);
 }
 
 socket.on('message', function (message, numClient){
