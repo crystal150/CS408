@@ -8,13 +8,13 @@
 
 <base target='_blank'>
 
-<title>WebRTC client</title>
+<title>Audience LinkVoice</title>
 
-<link rel='stylesheet' href='../css/audience.css' />
+<link rel='stylesheet' href='../css/sign_audience.css' />
 
 </head>
 
-<body background="../images/background2.jpg"> 
+<body background="../images/background2.jpg">
 <div id="wrapper" style="position:relative">
 <div id="top" style="width:100%; height:15%; ">
     <img src="../images/logo.png" style="padding:15px 15px"/>
@@ -25,22 +25,29 @@
     <button type="button" class="menu_button" style="width:23%;display:inline-block">ABOUT US</button>
     <button type="button" class="menu_button" style="width:23%;display:inline-block">HELP</button>
 </div>
-
+<div id='videos' style="visibility: hidden">
+	<video id='localVideo' autoplay muted></video>
+	<video id='remoteVideo' autoplay muted></video>
+</div>
 <div id="url">
-    <center>LinkVoice.com/3353746661</center>
+	<!-- Link will be appened by jquery -->
 </div>
-<center><button type="button" id="copy_link_button">COPY LINK</button></center>
-</div>
+<center><button onclick="copyToClipboard('#link')" id="copy_link_button">COPY LINK</button></center>
 <center style="color:#ffffff">Your Name<center>
-<input type="text" name="name" style="width:80%; padding:0px">
+<input type="text" id="name" style="width:80%; padding:0px">
 <center style="color:#ffffff;padding-top:20px">Comment<center>
-<input type="text" name="comment" style="width:80%; padding:20px 0px">
-<center><div id="join_button" style="padding:60px; width:60px; height:60px"><img src="../images/mic_button.png" style="width:60px;height:60px;"/></div></center>
+<input type="text" id="comment" style="width:80%; padding:20px 0px">
+<div id="join_button" style="padding:60px">
+<input type="image" id='join' onclick="$.getScript('js/rtcAudience.js'); $(this).hide(); $('#not_granted').show();"
+			src="../images/join_button.png" />
+<input type="image" id='not_granted' src="../images/not_granted.png"/>
+</div>
+</div>
 
-
+<script src='//code.jquery.com/jquery-1.11.3.min.js'></script>
 <script src='/socket.io/socket.io.js'></script>
 <script src='js/lib/adapter.js'></script>
-<script src='js/main.js'></script>
+<script src='js/audience.js'></script>
 
 </body>
 </html>
