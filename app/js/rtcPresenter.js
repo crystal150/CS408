@@ -1,8 +1,10 @@
 'use strict';
 
+
 var sendChannel;
 var sendTextarea = document.getElementById("dataChannelSend");
 var receiveTextarea = document.getElementById("dataChannelReceive");
+// 2015. 12. 8 // deletes everylines which relate to sendMessage form.
 
 var isChannelReady;
 var isInitiator;
@@ -30,10 +32,12 @@ var sdpConstraints = {'mandatory': {
 
 /////////////////////////////////////////////
 
-// Document preprocess.
+// 2015. 11. 25 // Document preprocess.
 
+// 2015. 11. 25 // appends URL in PresenterView.html for easy copy.
 $("#url").append("<center id=\"link\">" + location.href + "</center>");
 
+// 2015. 11. 25 // provides easy copy button.
 function copyToClipboard(element) {
   console.log("copyToClipboard");
 	var $temp = $("<input>");
@@ -43,19 +47,21 @@ function copyToClipboard(element) {
   $temp.remove();
 }
 
+// 2015. 11. 25 // appends new audiences.
 function user_return(name, comment, numClient) {
 	return '<tr id="line' + numClient +'">\n'
 					+ '<td class="number_td">' + numClient + '</td>\n'
 					+ '<td class="name_td">' + name + '</td>\n'
 					+ '<td class="comm_td">' + comment + '</td>\n'
 					+ '<td class="butt_td">'
-					+ '<input type="image" id="grant' + numClient + '" onclick="granting(' + numClient + '); $(this).hide(); $(\'#granted' + numClient + '\').show();"'
+					+ '<input type="image" id="grant' + numClient + '" onclick="grantClient(' + numClient + '); $(this).hide(); $(\'#granted' + numClient + '\').show();"'
 					+ 'src="../images/grant_button.png">\n'
 					+ '<input type="image" id="granted' + numClient + '" src="../images/granted_button.png"></td>\n'
 				+ '</tr>';
 }
 
-function granting(numClient) {
+// 2015. 11. 25 // grants specific audience.
+function grantClient(numClient) {
 	handleRemoteHangup();
 	$('#granted' + turn).hide();
 	$('#grant' + turn).show();
@@ -65,13 +71,10 @@ function granting(numClient) {
 
 /////////////////////////////////////////////
 
+// from https://github.com/johnpmayer/webrtc-codelab.
+// modified many times.
+
 var room = location.pathname.substring(1);
-if (room === '') {
-//  room = prompt('Enter room name:');
-  room = 'foo';
-} else {
-  //
-}
 
 var socket = io.connect();
 
@@ -83,7 +86,6 @@ if (room !== '') {
 socket.on('created', function (room){
   console.log('Created room ' + room);
   isInitiator = true;
-//	getUserMedia(constraints, handleUserMedia, handleUserMediaError);
 	console.log('Getting user media with constraints', constraints);
 });
 
@@ -91,6 +93,7 @@ socket.on('full', function (room){
   console.log('Room ' + room + ' is full');
 });
 
+// 2015. 11. 25 // when someone joins, appends audience's data to table.
 socket.on('join', function (room, numClients, name, comment){
   console.log('Another peer made a request to join room ' + room + ' turn ' + numClients);
 	if (isInitiator) {
@@ -133,9 +136,12 @@ socket.on('message', function (message, numClient){
     var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,
       candidate:message.candidate});
     pc.addIceCandidate(candidate);
+
+	// 2015. 11. 25 // when speaking audience is gone, hangs up remote video and hide.
   } else if (message === 'bye' && isStarted && turn == numClient) {
     handleRemoteHangup();
 		$("#line" + numClient).hide();
+	// 2015. 11. 30 // when audience who is not speaking is gone, hide those data from table.
   } else if (message === 'bye') {
 		$("#line" + numClient).hide();
 	}
@@ -161,6 +167,9 @@ function handleUserMediaError(error){
 }
 
 var constraints = {audio: true};
+
+getUserMedia(constraints, handleUserMedia, handleUserMediaError);
+// 2015. 11. 20 // deletes getUserMedia from original source.
 
 function maybeStart() {
 	console.log("BEFORE MAYBE START", isStarted, localStream, isChannelReady);
@@ -249,6 +258,8 @@ function enableMessageInterface(shouldEnable) {
     dataChannelSend.disabled = true;
   }
 }
+
+// 2015. 12. 8 // deletes everylines which relate to sendMessage form.
 
 function handleIceCandidate(event) {
   console.log('handleIceCandidate event: ', event);
@@ -353,8 +364,7 @@ function handleRemoteHangup() {
 }
 
 function stop() {
-  // isAudioMuted = false;
-  // isVideoMuted = false;
+	// 2015. 11. 25 // for next granting, closes current peer connection.
   try {
 		pc.close();
   	pc = null;

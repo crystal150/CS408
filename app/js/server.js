@@ -28,7 +28,9 @@ function start(route, handle) {
 		}
 
 		socket.on('generate', function () {
-			new_url = Math.floor(Math.random() * 1000);
+//			do {
+			new_url = Math.floor(Math.random() * 1000000);
+	//		} while(("/" + new_url) in urls)
 			urls["/" + new_url] = true;
 			populations[new_url] = -1;
 			log('Generate URL: ', new_url);

@@ -10,7 +10,7 @@ function index(res) {
 
 function audience(res) { 
   res.writeHead(200, {"Content-Type": "text/html"});
-	var htmlFile = fs.readFileSync("view/signAudience.html");
+	var htmlFile = fs.readFileSync("view/audienceView.html");
 	res.write(htmlFile);
   res.end();
 } 
